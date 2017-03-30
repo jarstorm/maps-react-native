@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Text, Image, View, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser } from '../actions';
-import { Card, CardSection, Input, Button, Spinner, Confirm } from './common';
-import MapView from 'react-native-maps';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
-  state = { showModal: false, mark: [] };
-
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -34,100 +31,47 @@ class LoginForm extends Component {
     );
   }
 
-  animate() {
-    this.setState({ showModal: !this.state.showModal });
-  }
-
-onAccept() {
-    console.log("accept");
-    this.setState({ showModal: false });
-}
-
-onDecline() {
-    console.log("onDecline");
-    this.setState({ showModal: false });
-}
-
-mapPress(event) {
-  let array = this.state.mark.slice();
-  array.push(event.nativeEvent.coordinate);
-  this.setState({mark: array});
-}
-
-renderElements() {
-return this.state.mark.map((coordinate) => {
-  return (
-    <MapView.Marker.Animated coordinate={coordinate} />
-  );
-});
-}
   render() {
-    let {container, map} = styles;
-
     return (
-      <View style={container}>
-        <MapView style={map} onPress={this.mapPress.bind(this)}>
-        {this.renderElements()}
-        </MapView>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={this.animate.bind(this)}
-            style={[styles.bubble, styles.button]}
-          >
-            <Text>Animate</Text>
-          </TouchableOpacity>
-        </View>
+      <Card>
+        <CardSection>
+          <Input
+            label="Email"
+            placeholder="email@gmail.com"
+            onChangeText={this.onEmailChange.bind(this)}
+            value={this.props.email}
+          />
+        </CardSection>
 
-        <Confirm
-          visible={this.state.showModal}
-          onAccept={this.onAccept.bind(this)}
-          onDecline={this.onDecline.bind(this)}
-        >
-          Are you sure you want to delete this?
-        </Confirm>
+        <CardSection>
+          <Input
+            secureTextEntry
+            label="Password"
+            placeholder="password"
+            onChangeText={this.onPasswordChange.bind(this)}
+            value={this.props.password}
+          />
+        </CardSection>
 
-      </View>
+        <Text style={styles.errorTextStyle}>
+          {this.props.error}
+        </Text>
+
+        <CardSection>
+          {this.renderButton()}
+        </CardSection>
+      </Card>
     );
   }
 }
 
 const styles = {
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  bubble: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
-  button: {
-    width: 80,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
-  },
+  errorTextStyle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
+  }
 };
-
 
 const mapStateToProps = ({ auth }) => {
   const { email, password, error, loading } = auth;

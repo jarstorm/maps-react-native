@@ -8,14 +8,14 @@ import Router from './Router';
 
 class App extends Component {
   componentWillMount() {
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyBVVcMrhr-b-yxw_QJEfixAKGo2HDQG8A8",
-      authDomain: "react-native-manager-1a5cf.firebaseapp.com",
-      databaseURL: "https://react-native-manager-1a5cf.firebaseio.com",
-      storageBucket: "react-native-manager-1a5cf.appspot.com",
-      messagingSenderId: "362679750864"
+    const config = {
+      apiKey: 'AIzaSyBR4FTGiOcTZ5OBNi6thE0KhCDR3PaOtQM',
+      authDomain: 'manager-2328b.firebaseapp.com',
+      databaseURL: 'https://manager-2328b.firebaseio.com',
+      storageBucket: 'manager-2328b.appspot.com',
+      messagingSenderId: '193075244299'
     };
+
     firebase.initializeApp(config);
   }
 

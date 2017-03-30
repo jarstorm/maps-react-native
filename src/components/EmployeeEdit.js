@@ -5,7 +5,6 @@ import Communications from 'react-native-communications';
 import EmployeeForm from './EmployeeForm';
 import { employeeUpdate, employeeSave, employeeDelete } from '../actions';
 import { Card, CardSection, Button, Confirm } from './common';
-import InstagramList from './InstagramList';
 
 class EmployeeEdit extends Component {
   state = { showModal: false };
@@ -61,9 +60,6 @@ class EmployeeEdit extends Component {
           </Button>
         </CardSection>
 
-<CardSection>
-  <InstagramList />
-</CardSection>
         <Confirm
           visible={this.state.showModal}
           onAccept={this.onAccept.bind(this)}

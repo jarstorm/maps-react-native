@@ -4,10 +4,8 @@ import {
   EMPLOYEE_UPDATE,
   EMPLOYEE_CREATE,
   EMPLOYEES_FETCH_SUCCESS,
-  EMPLOYEE_SAVE_SUCCESS,
-  PICTURES_FETCH_SUCCESS
+  EMPLOYEE_SAVE_SUCCESS
 } from './types';
-
 
 export const employeeUpdate = ({ prop, value }) => {
   return {
@@ -36,22 +34,6 @@ export const employeesFetch = () => {
     firebase.database().ref(`/users/${currentUser.uid}/employees`)
       .on('value', snapshot => {
         dispatch({ type: EMPLOYEES_FETCH_SUCCESS, payload: snapshot.val() });
-      });
-  };
-};
-
-export const picturesFetch = () => {
-
-  return (dispatch) => {
-
-    // Make a request for a user with a given ID
-    fetch('https://facebook.github.io/react-native/movies.json')
-      .then(function (response) {
-        console.log(response);
-        dispatch({ type: PICTURES_FETCH_SUCCESS, payload: response });
-      })
-      .catch(function (error) {
-        console.log(error);
       });
   };
 };

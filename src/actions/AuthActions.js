@@ -41,7 +41,7 @@ export const registerUser = ({ user, email, password }) => {
     const restApi = new RestApi();
 
     restApi.createUser(user, password, email)
-      .then(response => registerUserSuccess(dispatch, response))   // Successfully logged in                         
+      .then(response => registerUserSuccess(dispatch, response.data.token))   // Successfully logged in                         
       .catch(err => registerUserFail(dispatch, err));  // Catch any error 
   };
 };

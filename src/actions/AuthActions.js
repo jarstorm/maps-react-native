@@ -1,12 +1,24 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import {
+  USER_CHANGED,
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAIL,
+  REGISTER_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER
 } from './types';
+import RestApi from '../rest/RestApi';
+
+export const userChanged = (text) => {
+  return {
+    type: USER_CHANGED,
+    payload: text
+  };
+};
 
 export const emailChanged = (text) => {
   return {
@@ -22,6 +34,23 @@ export const passwordChanged = (text) => {
   };
 };
 
+export const registerUser = ({ user, email, password }) => {
+  return (dispatch) => {
+    dispatch({ type: REGISTER_USER });
+
+    const restApi = new RestApi();
+
+    restApi.createUser(user, password, email, function (err, data) {
+      if (err) {
+        registerUserFail(dispatch, err);
+      } else {
+        registerUserSuccess(dispatch, data);
+      }
+    });
+  };
+};
+
+
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
@@ -36,6 +65,21 @@ export const loginUser = ({ email, password }) => {
           .catch(() => loginUserFail(dispatch));
       });
   };
+};
+
+const registerUserFail = (dispatch, error) => {
+  console.log(error);
+  dispatch({ type: REGISTER_USER_FAIL });
+};
+
+const registerUserSuccess = (dispatch, token) => {
+  console.log(token);
+  dispatch({
+    type: REGISTER_USER_SUCCESS,
+    payload: token
+  });
+
+  Actions.main();
 };
 
 const loginUserFail = (dispatch) => {

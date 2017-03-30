@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { userChanged, emailChanged, passwordChanged, registerUser } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
-import { Actions } from 'react-native-router-flux';
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
+  onUserChange(text) {
+    this.props.userChanged(text);
+  }
+
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -15,13 +18,10 @@ class LoginForm extends Component {
   }
 
   onButtonPress() {
-    const { email, password } = this.props;
+    const { user, email, password } = this.props;
 
-    this.props.loginUser({ email, password });
+    this.props.registerUser({ user, email, password });
   }
- onRegisterButtonPress() {
-   Actions.register();
- }
 
   renderLoginButton() {
     if (this.props.loading) {
@@ -38,7 +38,7 @@ class LoginForm extends Component {
   renderRegisterButton() {
     if (!this.props.loading) {
       return (
-        <Button onPress={this.onRegisterButtonPress.bind(this)}>
+        <Button onPress={this.onButtonPress.bind(this)}>
           Register
         </Button>
       );
@@ -48,6 +48,15 @@ class LoginForm extends Component {
   render() {
     return (
       <Card>
+        <CardSection>
+          <Input
+            label="Username"
+            placeholder="username"
+            onChangeText={this.onUserChange.bind(this)}
+            value={this.props.user}
+          />
+        </CardSection>
+
         <CardSection>
           <Input
             label="Email"
@@ -72,9 +81,6 @@ class LoginForm extends Component {
         </Text>
 
         <CardSection>
-          {this.renderLoginButton()}
-        </CardSection>
-        <CardSection>
           {this.renderRegisterButton()}
         </CardSection>
       </Card>
@@ -91,11 +97,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
+  const { user, email, password, error, loading } = auth;
 
-  return { email, password, error, loading };
+  return { user, email, password, error, loading };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
-})(LoginForm);
+  userChanged, emailChanged, passwordChanged, registerUser
+})(RegisterForm);

@@ -5,6 +5,7 @@ import RegisterForm from './components/RegisterForm';
 import EmployeeList from './components/EmployeeList';
 import EmployeeCreate from './components/EmployeeCreate';
 import EmployeeEdit from './components/EmployeeEdit';
+import MainMapComponent from './components/MainMapComponent';
 
 const RouterComponent = () => {
   return (
@@ -15,13 +16,13 @@ const RouterComponent = () => {
       </Scene>
 
       <Scene key="main">
-        <Scene
+        <Scene key="map" component={MainMapComponent} title="map" initial/>        
+        <Scene key="employeeList"
           onRight={() => Actions.employeeCreate()}
           rightTitle="Add"
           key="employeeList"
           component={EmployeeList}
-          title="Employees"
-          initial
+          title="Employees"          
         />
         <Scene key="employeeCreate" component={EmployeeCreate} title="Create Employee" />
         <Scene key="employeeEdit" component={EmployeeEdit} title="Edit Employee" />

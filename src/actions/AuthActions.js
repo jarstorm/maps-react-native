@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
+import { AsyncStorage } from 'react-native';
 import {
   USER_CHANGED,
   EMAIL_CHANGED,
@@ -69,7 +70,13 @@ const registerUserFail = (dispatch, error) => {
 };
 
 const registerUserSuccess = (dispatch, token) => {
-  console.log(token);
+
+  try {
+    AsyncStorage.setItem('AuthToken', token);
+  } catch (error) {
+    console.log("Could not set token", error);
+  }
+
   dispatch({
     type: REGISTER_USER_SUCCESS,
     payload: token

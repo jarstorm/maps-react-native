@@ -15,6 +15,13 @@ export default class RestApi {
     });  
   };
 
+  loginUser (user, password) {   
+    return axios.post(this.getRestUrl() + '/auth/login', {
+      "username": user,
+      password
+    });  
+  };
+
   secureCall(callback) {
   	let that = this;
 	this.getToken().then((token) => {
@@ -22,10 +29,15 @@ export default class RestApi {
   	});
   }
 
-  async mapFetch() {
+  async mapFetch(latitude, longitude) {
+  	console.log(latitude, longitude);
   	return await this.getToken().then((token) => {
   		 return axios.get(this.getRestUrl() + '/map', {
-  			headers: {'Authorization': token}
+  			headers: {'Authorization': token},
+  			data: {
+  				latitude,
+  				longitude
+  			}
 		  });
   		 }).then((data) => {
 			console.log(data);

@@ -4,13 +4,13 @@ import {
 } from './types';
 import RestApi from '../rest/RestApi';
 
-export const mapFetch = () => {
+export const mapFetch = (latitude, longitude) => {
 
   return (dispatch) => {
     
     const restApi = new RestApi();
 
-    restApi.mapFetch().then((data) => {
+    restApi.mapFetch(latitude, longitude).then((data) => {
       console.log(data);
       dispatch({
         type: LOADED_MAP,

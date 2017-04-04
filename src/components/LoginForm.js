@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { userChanged, passwordChanged, loginUser } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 import { Actions } from 'react-native-router-flux';
 
 class LoginForm extends Component {
-  onEmailChange(text) {
-    this.props.emailChanged(text);
+  onUserChange(text) {
+    this.props.userChanged(text);
   }
 
   onPasswordChange(text) {
@@ -15,9 +15,9 @@ class LoginForm extends Component {
   }
 
   onButtonPress() {
-    const { email, password } = this.props;
+    const { user, password } = this.props;
 
-    this.props.loginUser({ email, password });
+    this.props.loginUser({ user, password });
   }
  onRegisterButtonPress() {
    Actions.register();
@@ -50,10 +50,10 @@ class LoginForm extends Component {
       <Card>
         <CardSection>
           <Input
-            label="Email"
-            placeholder="email@gmail.com"
-            onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
+            label="User"
+            placeholder="username"
+            onChangeText={this.onUserChange.bind(this)}
+            value={this.props.user}
           />
         </CardSection>
 
@@ -91,11 +91,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
+  const { user, password, error, loading } = auth;
 
-  return { email, password, error, loading };
+  return { user, password, error, loading };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
+  userChanged, passwordChanged, loginUser
 })(LoginForm);

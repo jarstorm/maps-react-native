@@ -9,7 +9,7 @@ import MapView from 'react-native-maps';
 class MainMapComponent extends Component {
 
   componentWillMount() {
-    this.props.mapFetch();
+    
   }
 
   renderPoints() {
@@ -26,16 +26,23 @@ class MainMapComponent extends Component {
 
   }
 
+onRegionChange(region) {
+  this.setState({region});
+}
+
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
   }
 
   render() {
         let {container, map} = styles;
+        this.props.mapFetch(this.state.region.latitude, this.state.region.longitude);
 
     return (
       <View style={container}>
          <MapView style={map}
+          onRegionChange={this.onRegionChange}
+
     initialRegion={{
       latitude: 37.78825,
       longitude: -122.4324,

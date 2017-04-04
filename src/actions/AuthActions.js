@@ -48,19 +48,16 @@ export const registerUser = ({ user, email, password }) => {
 };
 
 
-export const loginUser = ({ email, password }) => {
+export const loginUser = ({ user, password }) => {
+  console.log(user, password);
   return (dispatch) => {
     dispatch({ type: LOGIN_USER });
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(user => loginUserSuccess(dispatch, user))
-      .catch((error) => {
-        console.log(error);
+    const restApi = new RestApi();
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(user => loginUserSuccess(dispatch, user))
-          .catch(() => loginUserFail(dispatch));
-      });
+    restApi.loginUser(user, password)
+      .then(response => loginUserSuccess(dispatch, response.data.token))   // Successfully logged in                         
+      .catch(err => loginUserFail(dispatch));  // Catch any error 
   };
 };
 
@@ -89,10 +86,15 @@ const loginUserFail = (dispatch) => {
   dispatch({ type: LOGIN_USER_FAIL });
 };
 
-const loginUserSuccess = (dispatch, user) => {
+const loginUserSuccess = (dispatch, token) => {
+  try {
+    AsyncStorage.setItem('AuthToken', token);
+  } catch (error) {
+    console.log("Could not set token", error);
+  }
+
   dispatch({
-    type: LOGIN_USER_SUCCESS,
-    payload: user
+    type: LOGIN_USER_SUCCESS
   });
 
   Actions.main();

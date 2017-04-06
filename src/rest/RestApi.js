@@ -5,6 +5,7 @@ export default class RestApi {
 
   getRestUrl() {
   	return 'https://jarstorm-maps.herokuapp.com';
+  	//return 'http://localhost:4567';
   }
 
   createUser (user, password, email) {   
@@ -34,7 +35,7 @@ export default class RestApi {
   	return await this.getToken().then((token) => {
   		 return axios.get(this.getRestUrl() + '/map', {
   			headers: {'Authorization': token},
-  			data: {
+  			params: {
   				latitude,
   				longitude
   			}
@@ -42,7 +43,7 @@ export default class RestApi {
   		 }).then((data) => {
 			console.log(data);
 			return data.data;
-		});  
+		}).catch(error => console.log(error));  
   	
   };
 

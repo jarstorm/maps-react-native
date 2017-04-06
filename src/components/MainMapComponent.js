@@ -8,16 +8,12 @@ import MapView from 'react-native-maps';
 
 class MainMapComponent extends Component {
 
-  componentWillMount() {
-    
-  }
-
   renderPoints() {
     console.log("puntos", this.props.marks);
     return this.props.marks.map((point) => {
       const coordinate = {
-        latitude: point.latitude,
-        longitude: point.longitude
+        latitude: point.geo[0],
+        longitude: point.geo[1]
       };
       return (
         <MapView.Marker.Animated coordinate={coordinate} />
@@ -26,30 +22,17 @@ class MainMapComponent extends Component {
 
   }
 
-onRegionChange(region) {
-  this.setState({region});
+onRegionChangeComplete(region) {
+  console.log(region);
+ this.props.mapFetch(region.latitude, region.longitude);
 }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
-
   render() {
-        let {container, map} = styles;
-        this.props.mapFetch(this.state.region.latitude, this.state.region.longitude);
-
+        let {container, map} = styles;        
     return (
       <View style={container}>
          <MapView style={map}
-          onRegionChange={this.onRegionChange}
-
-    initialRegion={{
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }}
-  >
+          onRegionChangeComplete={this.onRegionChangeComplete.bind(this)} >
     {this.renderPoints()}
   </MapView>
       </View>

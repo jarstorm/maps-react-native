@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, ListView, View } from 'react-native';
+import { Text, ListView, View, TouchableOpacity } from 'react-native';
 import { mapFetch } from '../actions';
 import ListItem from './ListItem';
 import MapView from 'react-native-maps';
@@ -16,7 +16,12 @@ class MainMapComponent extends Component {
         longitude: point.geo[1]
       };
       return (
-        <MapView.Marker.Animated coordinate={coordinate} />
+        <MapView.Marker.Animated 
+          key={point._id}
+          coordinate={coordinate} 
+          title={point.title}
+          description={point.descrption}
+        />
       );
     });
 
@@ -35,6 +40,13 @@ onRegionChangeComplete(region) {
           onRegionChangeComplete={this.onRegionChangeComplete.bind(this)} >
     {this.renderPoints()}
   </MapView>
+
+<View style={styles.buttonContainer}>
+          <TouchableOpacity style={[styles.bubble, styles.button]}>
+            <Text>+</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     );
   }
@@ -56,8 +68,27 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-  }
-}
+  },
+  bubble: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  },
+};
+
 
 const mapStateToProps = state => {
   console.log("map state to prope", state);

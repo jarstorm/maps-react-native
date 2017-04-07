@@ -4,8 +4,8 @@ import { AsyncStorage } from 'react-native';
 export default class RestApi {
 
   getRestUrl() {
-  	return 'https://jarstorm-maps.herokuapp.com';
-  	//return 'http://localhost:4567';
+  	//return 'https://jarstorm-maps.herokuapp.com';
+  	return 'http://localhost:4567';
   }
 
   createUser (user, password, email) {   
@@ -44,7 +44,25 @@ export default class RestApi {
 			console.log(data);
 			return data.data;
 		}).catch(error => console.log(error));  
-  	
+  };
+
+async createMark(markData) {
+  	console.log(markData);
+  	const {name, description, geo} = markData;
+  	return await this.getToken().then((token) => {
+  		 return axios.post(this.getRestUrl() + '/map', 
+			{
+  				name,
+  				description, 
+  				geo
+  			},
+  		 {
+  			headers: {authorization: token}
+		  });
+  		 }).then((data) => {
+			console.log(data);
+			return data.data;
+		}).catch(error => console.log(error));  
   };
 
   async getToken() {  

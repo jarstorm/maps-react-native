@@ -1,6 +1,7 @@
 import { Actions } from 'react-native-router-flux';
 import {
-  LOADED_MAP
+  LOADED_MAP,
+  MARK_CREATED
 } from './types';
 import RestApi from '../rest/RestApi';
 
@@ -14,6 +15,22 @@ export const mapFetch = (latitude, longitude) => {
       console.log(data);
       dispatch({
         type: LOADED_MAP,
+        payload: data
+      });
+    });
+  };
+};
+
+export const createMark = (markData) => {
+
+  return (dispatch) => {
+    
+    const restApi = new RestApi();
+
+    restApi.createMark(markData).then((data) => {
+      console.log(data);
+      dispatch({
+        type: MARK_CREATED,
         payload: data
       });
     });

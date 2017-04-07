@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, ListView, View, TouchableOpacity } from 'react-native';
-import { mapFetch } from '../actions';
+import { mapFetch, createMark } from '../actions';
 import ListItem from './ListItem';
 import MapView from 'react-native-maps';
 
@@ -19,7 +19,7 @@ class MainMapComponent extends Component {
         <MapView.Marker.Animated 
           key={point._id}
           coordinate={coordinate} 
-          title={point.title}
+          title={point.name}
           description={point.descrption}
         />
       );
@@ -28,8 +28,17 @@ class MainMapComponent extends Component {
   }
 
 onRegionChangeComplete(region) {
-  console.log(region);
  this.props.mapFetch(region.latitude, region.longitude);
+}
+
+onPressAddButton(event) {
+  
+  const data = {
+    name: "nuevo",
+    description: "Este es uno nuevo",
+    geo: [ 44.00, -5.60]
+  }
+  this.props.createMark(data);
 }
 
   render() {
@@ -42,7 +51,9 @@ onRegionChangeComplete(region) {
   </MapView>
 
 <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.bubble, styles.button]}>
+          <TouchableOpacity 
+            style={[styles.bubble, styles.button]}
+            onPress={this.onPressAddButton.bind(this)}>
             <Text>+</Text>
           </TouchableOpacity>
         </View>
@@ -100,4 +111,4 @@ const mapStateToProps = state => {
   return { marks };
 };
 
-export default connect(mapStateToProps, { mapFetch })(MainMapComponent);
+export default connect(mapStateToProps, { mapFetch, createMark })(MainMapComponent);

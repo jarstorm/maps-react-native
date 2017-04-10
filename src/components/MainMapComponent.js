@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, ListView, View, TouchableOpacity } from 'react-native';
 import { mapFetch, createMark } from '../actions';
-import ListItem from './ListItem';
 import MapView from 'react-native-maps';
 
 class MainMapComponent extends Component {

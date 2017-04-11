@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import MainMapComponent from './components/MainMapComponent';
 import Menu from './Menu';
+import About from './components/About';
 import SideMenu from 'react-native-side-menu';
 
 class RouterComponent extends Component {
@@ -18,6 +19,11 @@ componentWillUpdate() {
  
 onMenuItemSelected(element) {
   console.log(element);
+  if ("About" === element) {
+    Actions.about();
+  }
+    this.setState({isOpen: false});
+
 }
   updateMenuState(isOpen) {
     this.setState({ isOpen });
@@ -31,7 +37,7 @@ showRouterMenu() {
 
 // Hay un bug con el menu. Hay que llamar al refresh con lo que el primer click no funciona
   render() {
-    const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
+    const menu = <Menu onItemSelected={this.onMenuItemSelected.bind(this)} />;
     
 
 
@@ -50,9 +56,10 @@ showRouterMenu() {
 
       <Scene key="main">
         <Scene key="map" component={MainMapComponent}         
-        title="Near points" initial
-        onLeft={() => Actions.refresh({onLeft: this.showRouterMenu.bind(this)})}
-        leftTitle="Menu"/>        
+          title="Near points" initial
+          onLeft={() => Actions.refresh({onLeft: this.showRouterMenu.bind(this)})}
+          leftTitle="Menu"/>        
+        <Scene key="about" component={About} title="About" />  
       </Scene>
     </Router>
     </SideMenu>

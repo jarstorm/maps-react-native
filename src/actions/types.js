@@ -12,3 +12,4 @@ export const LOGIN_USER = 'login_user';
 //Map
 export const LOADED_MAP = 'loaded_map';
 export const MARK_CREATED = 'mark_created';
+export const REGION_CHANGED = 'region_changed';

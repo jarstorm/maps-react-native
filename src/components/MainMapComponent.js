@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Text, ListView, View, TouchableOpacity } from 'react-native';
 import { mapFetch, createMark } from '../actions';
 import MapView from 'react-native-maps';
+import { regionChanged } from '../actions';
 
 class MainMapComponent extends Component {
 
@@ -26,8 +27,27 @@ class MainMapComponent extends Component {
 
   }
 
+componentDidMount() {
+  console.log(this.map);
+    navigator.geolocation.getCurrentPosition(
+    (position) => {
+      this.map.animateToRegion({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        latitudeDelta: 0.0025, longitudeDelta: 0.0025
+      });
+      //this.map.animateToRegion({latitude: -33.852896, longitude: 151.210291, latitudeDelta: 0.0025, longitudeDelta: 0.0025}, 15000)
+    },
+    (error) => alert(error.message),
+    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+  );
+  }
+
+
 onRegionChangeComplete(region) {
- this.props.mapFetch(region.latitude, region.longitude);
+  this.props.regionChanged(region);
+  //this.onRegisterButtonPress.bind(this);
+ //this.props.mapFetch(region.latitude, region.longitude);
 }
 
 onPressAddButton(event) {
@@ -44,8 +64,12 @@ onPressAddButton(event) {
         let {container, map} = styles;        
     return (
       <View style={container}>
-         <MapView style={map}
-          onRegionChangeComplete={this.onRegionChangeComplete.bind(this)} >
+         <MapView
+          ref={component => this.map = component} 
+          style={map}
+          onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
+          showsUserLocation={true}
+          followsUserLocation={true} >
     {this.renderPoints()}
   </MapView>
 
@@ -110,4 +134,4 @@ const mapStateToProps = state => {
   return { marks };
 };
 
-export default connect(mapStateToProps, { mapFetch, createMark })(MainMapComponent);
+export default connect(mapStateToProps, { mapFetch, createMark, regionChanged })(MainMapComponent);

@@ -1,7 +1,8 @@
 import { Actions } from 'react-native-router-flux';
 import {
   LOADED_MAP,
-  MARK_CREATED
+  MARK_CREATED,
+  REGION_CHANGED
 } from './types';
 import RestApi from '../rest/RestApi';
 
@@ -34,5 +35,12 @@ export const createMark = (markData) => {
         payload: data
       });
     });
+  };
+};
+
+export const regionChanged = (region) => {
+  return {
+    type: REGION_CHANGED,
+    payload: region
   };
 };

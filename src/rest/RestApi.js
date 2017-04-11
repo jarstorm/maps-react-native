@@ -4,8 +4,8 @@ import { AsyncStorage } from 'react-native';
 export default class RestApi {
 
   getRestUrl() {
-  	//return 'https://jarstorm-maps.herokuapp.com';
-  	return 'http://localhost:4567';
+  	return 'https://jarstorm-maps.herokuapp.com';
+  	//return 'http://localhost:4567';
   }
 
   createUser (user, password, email) {   

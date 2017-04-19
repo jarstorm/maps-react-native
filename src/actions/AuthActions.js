@@ -9,7 +9,8 @@ import {
   REGISTER_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
-  LOGIN_USER
+  LOGIN_USER,
+  AUTO_LOGIN_USER_FAIL
 } from './types';
 import RestApi from '../rest/RestApi';
 
@@ -41,7 +42,7 @@ export const registerUser = ({ user, email, password }) => {
     const restApi = new RestApi();
 
     restApi.createUser(user, password, email)
-      .then(response => registerUserSuccess(dispatch, response.data.token))   // Successfully logged in                         
+      .then(response => registerUserSuccess(dispatch, response.data.token, user, password))   // Successfully logged in                         
       .catch(err => registerUserFail(dispatch, err));  // Catch any error 
   };
 };
@@ -55,20 +56,42 @@ export const loginUser = ({ user, password }) => {
     const restApi = new RestApi();
 
     restApi.loginUser(user, password)
-      .then(response => loginUserSuccess(dispatch, response.data.token))   // Successfully logged in                         
-      .catch(err => loginUserFail(dispatch));  // Catch any error 
+      .then(response => loginUserSuccess(dispatch, response.data.token, user, password))   // Successfully logged in                         
+      .catch(err => loginUserFail(dispatch, err));  // Catch any error 
   };
 };
 
+export const autoLogin = () => {
+  return (dispatch) => {    
+    console.log("autologin");
+    AsyncStorage.getItem('AuthCredentialsUser').then((authData) => {      
+      if (authData) {
+        AsyncStorage.getItem('AuthCredentialsPassword').then((authPassword) => {
+          const restApi = new RestApi();
+
+    restApi.loginUser(authData, authPassword)
+      .then(response => loginUserSuccess(dispatch, response.data.token, authData, authPassword))   // Successfully logged in                         
+      .catch(err => loginUserFail(dispatch, err));  // Catch any error 
+
+        });                
+      } else {
+        dispatch({ type: AUTO_LOGIN_USER_FAIL });
+      }
+    }).catch((err) => dispatch({ type: AUTO_LOGIN_USER_FAIL }));
+        
+};
+};
 const registerUserFail = (dispatch, error) => {
   console.log(error);
   dispatch({ type: REGISTER_USER_FAIL });
 };
 
-const registerUserSuccess = (dispatch, token) => {
+const registerUserSuccess = (dispatch, token, user, password) => {
 
   try {
     AsyncStorage.setItem('AuthToken', token);
+    AsyncStorage.setItem('AuthCredentialsUser', user);
+    AsyncStorage.setItem('AuthCredentialsPassword', password);
   } catch (error) {
     console.log("Could not set token", error);
   }
@@ -81,13 +104,16 @@ const registerUserSuccess = (dispatch, token) => {
   Actions.main();
 };
 
-const loginUserFail = (dispatch) => {
+const loginUserFail = (dispatch, err) => {
+  console.log(err);
   dispatch({ type: LOGIN_USER_FAIL });
 };
 
-const loginUserSuccess = (dispatch, token) => {
+const loginUserSuccess = (dispatch, token, user, password) => {
   try {
     AsyncStorage.setItem('AuthToken', token);
+    AsyncStorage.setItem('AuthCredentialsUser', user);
+    AsyncStorage.setItem('AuthCredentialsPassword', password);
   } catch (error) {
     console.log("Could not set token", error);
   }

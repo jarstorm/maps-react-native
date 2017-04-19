@@ -7,7 +7,8 @@ import {
   REGISTER_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
-  LOGIN_USER
+  LOGIN_USER,
+  AUTO_LOGIN_USER_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -16,7 +17,8 @@ const INITIAL_STATE = {
   password: '',
   user: null,
   error: '',
-  loading: false
+  loading: false,
+  initialLoading: true
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -33,6 +35,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, ...INITIAL_STATE };
     case LOGIN_USER_FAIL:
       return { ...state, error: 'Authentication Failed.', password: '', loading: false };
+    case AUTO_LOGIN_USER_FAIL:
+      return { ...state, ...INITIAL_STATE, initialLoading: false };
     case REGISTER_USER:
       return { ...state, loading: true, error: '' };  
     case REGISTER_USER_SUCCESS:

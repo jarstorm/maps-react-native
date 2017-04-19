@@ -11,7 +11,6 @@ class RouterComponent extends Component {
 
 componentWillMount() {
   this.setState({isOpen: false});
-  console.log("mount");
 }
 componentWillUpdate() {
   console.log("update");

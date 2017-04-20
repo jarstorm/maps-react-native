@@ -2,9 +2,8 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, ListView, View, TouchableOpacity } from 'react-native';
-import { mapFetch, createMark } from '../actions';
 import MapView from 'react-native-maps';
-import { regionChanged } from '../actions';
+import { mapFetch, createMark, regionChanged, addButtonPress } from '../actions';
 
 class MainMapComponent extends Component {
 
@@ -47,21 +46,42 @@ componentDidMount() {
 onRegionChangeComplete(region) {
   this.props.regionChanged(region);
   //this.onRegisterButtonPress.bind(this);
- //this.props.mapFetch(region.latitude, region.longitude);
+ this.props.mapFetch(region.latitude, region.longitude);
 }
 
 onPressAddButton(event) {
-  
-  const data = {
-    name: "nuevo",
-    description: "Este es uno nuevo",
-    geo: [ 44.00, -5.60]
+  this.props.addButtonPress();
+}
+
+showAddMessage() {
+  console.log("show");
+  if (this.props.addButtonPressed) {
+    console.log("show dentro");
+    return (
+    <Text style={[styles.bubble]}>
+      Tap on screen to add
+    </Text>
+    
+    );
   }
-  this.props.createMark(data);
+}
+
+mapPress(event) {
+  const coordinate = event.nativeEvent.coordinate;
+  if (this.props.addButtonPressed) {    
+    const data = {
+      name: "nuevo",
+      description: "Este es uno nuevo",
+      geo: [ coordinate.latitude, coordinate.longitude]
+    };
+    this.props.createMark(data);    
+    setTimeout(() => {this.props.mapFetch(coordinate.latitude, coordinate.longitude);console.log("llamando")}, 1000)
+  } 
 }
 
   render() {
         let {container, map} = styles;        
+        console.log("Props", this.props);
     return (
       <View style={container}>
          <MapView
@@ -69,16 +89,18 @@ onPressAddButton(event) {
           style={map}
           onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
           showsUserLocation={true}
-          followsUserLocation={true} >
+          followsUserLocation={true}
+          onPress={this.mapPress.bind(this)} >
     {this.renderPoints()}
   </MapView>
 
-<View style={styles.buttonContainer}>
+  <View style={styles.buttonContainer}>
           <TouchableOpacity 
             style={[styles.bubble, styles.button]}
             onPress={this.onPressAddButton.bind(this)}>
             <Text>+</Text>
           </TouchableOpacity>
+          {this.showAddMessage()}
         </View>
 
       </View>
@@ -124,14 +146,16 @@ const styles = {
 };
 
 
-const mapStateToProps = state => {
-  console.log("map state to prope", state);
+const mapStateToProps = state => {  
+  const { addButtonPressed } = state.map;
+
   const marks = _.map(state.map.marks, (val, uid) => {
     console.log(val, uid);
     return { ...val, uid };
   });
 
-  return { marks };
+console.log({ marks, addButtonPressed });
+  return { marks, addButtonPressed };
 };
 
-export default connect(mapStateToProps, { mapFetch, createMark, regionChanged })(MainMapComponent);
+export default connect(mapStateToProps, { mapFetch, createMark, regionChanged, addButtonPress })(MainMapComponent);

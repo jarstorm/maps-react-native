@@ -2,7 +2,8 @@ import { Actions } from 'react-native-router-flux';
 import {
   LOADED_MAP,
   MARK_CREATED,
-  REGION_CHANGED
+  REGION_CHANGED,
+  ADD_BUTTON_PRESSED
 } from './types';
 import RestApi from '../rest/RestApi';
 
@@ -42,5 +43,11 @@ export const regionChanged = (region) => {
   return {
     type: REGION_CHANGED,
     payload: region
+  };
+};
+
+export const addButtonPress = () => {
+  return {
+    type: ADD_BUTTON_PRESSED
   };
 };
